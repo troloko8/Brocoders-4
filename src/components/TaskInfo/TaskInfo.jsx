@@ -64,7 +64,7 @@ const TaskInfo = (props) => {
         :
         <div className={classes.error}>
           <div style={{ margin: '15px' }}> ERORR: this task not found</div>
-          <Link to="Brocoders-4/" style={{ textDecoration: 'none' }}>
+          <Link to="/Brocoders-4" style={{ textDecoration: 'none' }}>
             <ButtonTable >
               back
         </ButtonTable>
