@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "efa67c52775dff0d3602381c190dbd7d",
+    "revision": "8b5b8a357da971accea878034ff60b9e",
     "url": "/Brocoders-4/index.html"
   },
   {
-    "revision": "8df0c5015d40e3e475f4",
+    "revision": "51df71f8660f559153c9",
     "url": "/Brocoders-4/static/css/main.34de6062.chunk.css"
   },
   {
-    "revision": "164ebeab59ace6bba38e",
-    "url": "/Brocoders-4/static/js/2.790562aa.chunk.js"
+    "revision": "1ee08d8109aef3ea57d2",
+    "url": "/Brocoders-4/static/js/2.fd5dbd65.chunk.js"
   },
   {
-    "revision": "8df0c5015d40e3e475f4",
-    "url": "/Brocoders-4/static/js/main.64ebcc7c.chunk.js"
+    "revision": "51df71f8660f559153c9",
+    "url": "/Brocoders-4/static/js/main.c4a445dd.chunk.js"
   },
   {
     "revision": "bd1a7a1f67663eaed04f",
