@@ -66,7 +66,7 @@ function TableTasks(props) {
         {moment.utc(row.timeSpend).format("HH:mm:ss")}
       </StyledTableCell>
       <StyledTableCell align="left" >
-        <Link to={`/task/${row.number}`} style={{ textDecoration: 'none' }}>
+        <Link to={`Brocoders-4/task/${row.number}`} style={{ textDecoration: 'none' }}>
           <ButtonTable
             tabIndex={row.number}
             key={row.number}

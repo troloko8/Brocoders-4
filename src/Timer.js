@@ -18,8 +18,8 @@ function Timer() {
   return (
     <Provider store={store}>
       <BrowserRouter >
-        <Route exact path="/" component={MainContainer} />
-        <Route path="/task/:id" component={TaskInfo} />
+        <Route exact path="/Brocoders-4/" component={MainContainer} />
+        <Route path="/Brocoders-4/task/:id" component={TaskInfo} />
       </BrowserRouter>
     </Provider>
   );
