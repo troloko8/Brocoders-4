@@ -2,7 +2,12 @@
 // export const GET_STOPWATCH_TIME_TO_START = 'GET_STOPWATCH_TIME_TO_START';
 // export const GET_STOPWATCH_TIME_TO_END = 'GET_STOPWATCH_TIME_TO_END';
 // export const GET_STOPWATCH_TIME_TO_SPEND = 'GET_OPWATCH_TIME_TO_SPEND';
+export const GET_MODAL_STATUS = 'GET_MODAL_STATUS';
 
+export const getModalStatus = status => ({
+  type: GET_MODAL_STATUS,
+  payload: status
+})
 // export const getNameStopwatch = name => ({
 //   type: GET_STOPWATCH_NAME_TASK,
 //   payload: name

@@ -55,7 +55,7 @@ const TaskInfo = (props) => {
             <li>timeEnd: {moment(taskInfo.timeEnd).format("HH:mm:ss")}</li>
             <li>timeSpend: {moment.utc(taskInfo.timeSpend).format("HH:mm:ss")}</li>
           </ul>
-          <Link to="/Brocoders-4" style={{ textDecoration: 'none' }}>
+          <Link to="/" style={{ textDecoration: 'none' }}>
             <ButtonTable>
               back
         </ButtonTable>
@@ -64,7 +64,7 @@ const TaskInfo = (props) => {
         :
         <div className={classes.error}>
           <div style={{ margin: '15px' }}> ERORR: this task not found</div>
-          <Link to="/Brocoders-4" style={{ textDecoration: 'none' }}>
+          <Link to="/" style={{ textDecoration: 'none' }}>
             <ButtonTable >
               back
         </ButtonTable>
@@ -87,15 +87,18 @@ TaskInfo.propTypes = {
     nameTask: PropTypes.string,
     timeStart: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeEnd: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeSpend: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
   }))
 }

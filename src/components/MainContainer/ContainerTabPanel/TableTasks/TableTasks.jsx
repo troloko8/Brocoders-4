@@ -15,6 +15,7 @@ import PropTypes from 'prop-types'
 
 const blue900 = blue[900];
 const blue50 = blue[50];
+const arrTableHead = ['№', 'Task', 'Time start', 'Time end', 'Time spend', 'Info', 'Delete']
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -40,12 +41,10 @@ const ButtonTable = styled(Button)({
 })
 
 function TableTasks(props) {
-
   localStorage.setItem('tasks', JSON.stringify(props.rows))
 
-  const deleteTask = async (e) => {
+  const deleteTask = (e) => {
     const index = e.target.closest('button').getAttribute('tabindex')
-
     props.deleteRowTasks(parseInt(index))
   }
   const mapTableTasks = props.rows.map(row => (
@@ -66,7 +65,7 @@ function TableTasks(props) {
         {moment.utc(row.timeSpend).format("HH:mm:ss")}
       </StyledTableCell>
       <StyledTableCell align="left" >
-        <Link to={`Brocoders-4/task/${row.number}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/task/${row.number}`} style={{ textDecoration: 'none' }}>
           <ButtonTable
             tabIndex={row.number}
             key={row.number}
@@ -80,18 +79,15 @@ function TableTasks(props) {
       </StyledTableCell>
     </StyledTableRow>
   ))
+  const mapTableHeadCell = arrTableHead.map(cell =>
+    <StyledTableCell align="left" key={cell}>{cell}</StyledTableCell>
+  )
 
   return (
     <Table  >
       <TableHead>
         <TableRow>
-          <StyledTableCell >№</StyledTableCell>
-          <StyledTableCell align="left">Task</StyledTableCell>
-          <StyledTableCell align="left">Time start</StyledTableCell>
-          <StyledTableCell align="left">Time end</StyledTableCell>
-          <StyledTableCell align="left">Time spend</StyledTableCell>
-          <StyledTableCell align="left">Info</StyledTableCell>
-          <StyledTableCell align="left">Delete</StyledTableCell>
+          {mapTableHeadCell}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -117,17 +113,21 @@ TableTasks.propTypes = {
     nameTask: PropTypes.string,
     timeStart: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeEnd: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeSpend: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
-  }))
+  })),
+  deleteRowTasks: PropTypes.func
 }
 
 

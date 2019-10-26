@@ -1,3 +1,20 @@
+import { GET_MODAL_STATUS } from './actions'
+
+const defaultState = {
+  status: false
+};
+
+export const stopwatchReducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case 'GET_MODAL_STATUS':
+      return {
+        ...state,
+        status: action.payload
+      }
+  }
+  return state;
+}
+
 // import {
 //   GET_STOPWATCH_NAME_TASK,
 //   GET_STOPWATCH_TIME_TO_START,

@@ -3,6 +3,6 @@ import { stopwatchReducer } from "./stopwatch/reducers";
 import { tableTasksReducer } from "./tableTasks/reducers";
 
 export default combineReducers({
-  // stopwatch: stopwatchReducer,
+  stopwatch: stopwatchReducer,
   tableTasks: tableTasksReducer,
 });

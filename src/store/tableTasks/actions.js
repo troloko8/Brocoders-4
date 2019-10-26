@@ -114,7 +114,7 @@ export const deleteRowTasks = (index) => ({
   payload: index,
 })
 
-export const generateNewTasks = (arr) => ({
+export const generateNewTasks = () => ({
   type: GENERATE_NEW_TASKS,
   payload: randomArrTasks,
 })

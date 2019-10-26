@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -6,10 +6,11 @@ import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import { makeStyles } from '@material-ui/styles';
 import { setRowTasks } from '../../../store/tableTasks/actions'
+import { getModalStatus } from '../../../store/stopwatch/actions'
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
-import Modal from '@material-ui/core/Modal';
 import PropTypes from 'prop-types';
+import ModalWindow from './ModalWindow/ModalWindow'
 
 const pink600 = pink[600]
 const blue900 = blue[900]
@@ -44,30 +45,6 @@ const useStyles = makeStyles({
     textAlignLast: 'center',
     color: blue900,
   },
-  modal: {
-    width: '70%',
-    padding: '15px',
-    background: 'white',
-    height: '200px',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50% , -50%)'
-  },
-  modalTitle: {
-    color: pink600,
-    fontSize: '20px',
-    marginBottom: '15px'
-  },
-  modalText: {
-    color: 'grey'
-  },
-  modalButton: {
-    color: blue900,
-    position: "absolute",
-    right: '15px',
-    bottom: '15px'
-  }
 })
 
 const Stopwatch = (props) => {
@@ -77,11 +54,11 @@ const Stopwatch = (props) => {
 
   const [runningTime, setRunningTime] = useState(0);
   const [timer, setTimer] = useState(Date.now());
-  const [modalStatus, setModalStatus] = useState(false);
   const [taskName, setTaskName] = useState('');
   const [timeStart, setTimeStart] = useState('');
   const [numberTask, setNumberTask] = useState(1);
   const [buttonText, setButtonText] = useState('start');
+  const [disabledTextInput, setDisabledTextInput] = useState(false);
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value)
@@ -94,6 +71,8 @@ const Stopwatch = (props) => {
     setTimer(setInterval(() => {
       setRunningTime(Date.now() - startTime);
     }))
+    setDisabledTextInput(true)
+    setTimeStart(Date.now())
     localStorage.setItem('startTime', JSON.stringify(startTime))
   }
 
@@ -104,41 +83,26 @@ const Stopwatch = (props) => {
     setTaskName('')
     localStorage.removeItem('startTime')
     localStorage.removeItem('taskName')
+    setDisabledTextInput(false)
+
+    localStorage.setItem('newTask', JSON.stringify({
+      number: numberTask,
+      nameTask: taskName,
+      timeStart: timeStart,
+      timeEnd: Date.now(),
+      timeSpend: runningTime,
+    }))
+
+    props.setRowTasks()
   };
 
-  const hadleButtonStart = (e) => {
-    taskName === "" ? setModalStatus(true) : setModalStatus(false)
+  const handleButtonStopwatch = (e) => {
 
     if (taskName !== "") {
-
-      if (e.currentTarget.value === "start") {
-        startStopwatche(Date.now())
-        setTimeStart(Date.now())
-      } else {
-        stopStopwatch()
-
-        localStorage.setItem('newTask', JSON.stringify({
-          number: numberTask,
-          nameTask: taskName,
-          timeStart: timeStart,
-          timeEnd: Date.now(),
-          timeSpend: runningTime,
-        }))
-        // const newTask = {
-        //   number: numberTask,
-        //   nameTask: taskName,
-        //   timeStart: timeStart,
-        //   timeEnd: Date.now(),
-        //   timeSpend: runningTime,
-        // }
-
-        props.setRowTasks()//newTask)
-      }
+      e.currentTarget.value === "start" ? startStopwatche(Date.now()) : stopStopwatch()
+    } else {
+      props.getModalStatus(true)
     }
-  }
-
-  const handleModalClose = () => {
-    setModalStatus(false)
   }
 
   window.onload = () => {
@@ -157,6 +121,7 @@ const Stopwatch = (props) => {
         margin="normal"
         onChange={changeTaskName}
         value={taskName}
+        disabled={disabledTextInput}
       />
       <Box
         className={classes.taskTimer}
@@ -164,26 +129,18 @@ const Stopwatch = (props) => {
           <Box
             component="span"
             className={classes.timer}
-          >{moment.utc(runningTime).format("HH:mm:ss")}</Box>}
+          >{moment.utc(runningTime).format("HH:mm:ss")}</Box>
+        }
       />
       <Button
         variant="text"
         className={classes.buttonStopOrStart}
         value={buttonText}
-        onClick={hadleButtonStart}
+        onClick={handleButtonStopwatch}
       >
         {buttonText}
       </Button>
-      <Modal open={modalStatus} >
-        <div className={classes.modal}>
-          <h3 className={classes.modalTitle}> Empty task name</h3>
-          <p className={classes.modalText}>You are truing close your task without name? enter the title and try again!</p>
-          <Button
-            onClick={handleModalClose}
-            className={classes.modalButton}
-          >close</Button>
-        </div>
-      </Modal>
+      <ModalWindow />
     </div >
   );
 }
@@ -196,6 +153,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   setRowTasks,
+  getModalStatus
 }
 
 Stopwatch.propTypes = {
@@ -204,17 +162,22 @@ Stopwatch.propTypes = {
     nameTask: PropTypes.string,
     timeStart: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeEnd: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
     timeSpend: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.object,
     ]),
-  }))
+  })),
+  setRowTasks: PropTypes.func,
+  getModalStatus: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stopwatch)
