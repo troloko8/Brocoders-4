@@ -9,7 +9,7 @@ import blue from '@material-ui/core/colors/blue';
 import { styled } from '@material-ui/styles';
 import { generateNewTasks } from '../../../../store/tableTasks/actions'
 import PropTypes from 'prop-types'
-
+// console.log(moment(Date.now()).format('MM:DD'))
 const blue900 = blue[900]
 
 const ButtonGenerate = styled(Button)({
@@ -25,29 +25,37 @@ const transformTime = (time, format) => {
 }
 
 const createChartMinutesOnHour = (props, arr) => {
+  const dayInToday = parseInt(moment(Date.now()).format('D'))
   for (let x = 0; x < props.rows.length; x++) {
 
-    let hourStart = transformTime(props.rows[x].timeStart, 'H'),
-      hourEnd = transformTime(props.rows[x].timeEnd, 'H'),
-      hourStartMinutes = transformTime(props.rows[x].timeStart, 'm'),
-      hourEndMinutes = transformTime(props.rows[x].timeEnd, 'm'),
-      timeSpend = moment
-        .duration(moment(props.rows[x].timeEnd)
-          .diff(moment(props.rows[x].timeStart)))
-        .asMinutes() - ((60 - hourStartMinutes) + hourEndMinutes)
+    if (dayInToday === transformTime(props.rows[x].timeStart, 'D')) {
 
-    if (hourStart === hourEnd) {
-      arr[hourStart].minutes += (hourEndMinutes - hourStartMinutes)
-    } else {
-      arr[hourStart].minutes += (60 - transformTime(props.rows[x].timeStart, 'm'))
-      arr[hourEnd].minutes += parseInt(transformTime(props.rows[x].timeEnd, 'm'))
-    }
-    if (hourEnd - hourStart > 1) {
-      for (let i = hourStart + 1; i < hourEnd; i++) {
-        arr[i].minutes = timeSpend > 60 ? 60 : timeSpend
-        timeSpend -= arr[i].minutes
+      let hourStart = transformTime(props.rows[x].timeStart, 'H'),
+        hourEnd = transformTime(props.rows[x].timeEnd, 'H'),
+        hourStartMinutes = transformTime(props.rows[x].timeStart, 'm'),
+        hourEndMinutes = transformTime(props.rows[x].timeEnd, 'm'),
+        timeSpend = moment
+          .duration(moment(props.rows[x].timeEnd)
+            .diff(moment(props.rows[x].timeStart)))
+          .asMinutes() - ((60 - hourStartMinutes) + hourEndMinutes)
+
+      if (hourStart === hourEnd) {
+        arr[hourStart].minutes += (hourEndMinutes - hourStartMinutes)
+      } else {
+        arr[hourStart].minutes += (60 - transformTime(props.rows[x].timeStart, 'm'))
+        arr[hourEnd].minutes += parseInt(transformTime(props.rows[x].timeEnd, 'm'))
+      }
+      if (hourEnd - hourStart > 1) {
+        for (let i = hourStart + 1; i < hourEnd; i++) {
+          arr[i].minutes = timeSpend > 60 ? 60 : timeSpend
+          timeSpend -= arr[i].minutes
+        }
       }
     }
+    else {
+      x++
+    }
+
   }
 }
 let arr = []
