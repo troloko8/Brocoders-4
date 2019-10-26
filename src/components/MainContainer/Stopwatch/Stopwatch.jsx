@@ -58,7 +58,6 @@ const Stopwatch = (props) => {
   const [timeStart, setTimeStart] = useState('');
   const [numberTask, setNumberTask] = useState(1);
   const [buttonText, setButtonText] = useState('start');
-  const [disabledTextInput, setDisabledTextInput] = useState(false);
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value)
@@ -66,44 +65,38 @@ const Stopwatch = (props) => {
   }
 
   const startStopwatche = (startTime) => {
+
     props.rows.length === 0 ? setNumberTask(1) : setNumberTask(props.rows[props.rows.length - 1].number + 1)
     setButtonText('stop')
     setTimer(setInterval(() => {
       setRunningTime(Date.now() - startTime);
     }))
-    setDisabledTextInput(true)
     setTimeStart(Date.now())
     localStorage.setItem('startTime', JSON.stringify(startTime))
   }
 
   const stopStopwatch = () => {
-    clearInterval(timer)
-    setButtonText('start')
-    setRunningTime(0)
-    setTaskName('')
-    localStorage.removeItem('startTime')
-    localStorage.removeItem('taskName')
-    setDisabledTextInput(false)
-
-    localStorage.setItem('newTask', JSON.stringify({
-      number: numberTask,
-      nameTask: taskName,
-      timeStart: timeStart,
-      timeEnd: Date.now(),
-      timeSpend: runningTime,
-    }))
-
-    props.setRowTasks()
-  };
-
-  const handleButtonStopwatch = (e) => {
-
-    if (taskName !== "") {
-      e.currentTarget.value === "start" ? startStopwatche(Date.now()) : stopStopwatch()
-    } else {
+    if (taskName === "") {
       props.getModalStatus(true)
+    } else {
+      clearInterval(timer)
+      setButtonText('start')
+      setRunningTime(0)
+      setTaskName('')
+      localStorage.removeItem('startTime')
+      localStorage.removeItem('taskName')
+
+      localStorage.setItem('newTask', JSON.stringify({
+        number: numberTask,
+        nameTask: taskName,
+        timeStart: timeStart,
+        timeEnd: Date.now(),
+        timeSpend: runningTime,
+      }))
+
+      props.setRowTasks()
     }
-  }
+  };
 
   window.onload = () => {
     if (strogeSaveTimeRinning !== null) {
@@ -121,7 +114,6 @@ const Stopwatch = (props) => {
         margin="normal"
         onChange={changeTaskName}
         value={taskName}
-        disabled={disabledTextInput}
       />
       <Box
         className={classes.taskTimer}
@@ -136,7 +128,13 @@ const Stopwatch = (props) => {
         variant="text"
         className={classes.buttonStopOrStart}
         value={buttonText}
-        onClick={handleButtonStopwatch}
+        onClick={
+          (e) => {
+            e.currentTarget.value === "start"
+              ? startStopwatche(Date.now())
+              : stopStopwatch()
+          }
+        }
       >
         {buttonText}
       </Button>
