@@ -9,7 +9,7 @@ import blue from '@material-ui/core/colors/blue';
 import { styled } from '@material-ui/styles';
 import { generateNewTasks } from '../../../../store/tableTasks/actions'
 import PropTypes from 'prop-types'
-// console.log(moment(Date.now()).format('MM:DD'))
+
 const blue900 = blue[900]
 
 const ButtonGenerate = styled(Button)({
@@ -26,15 +26,16 @@ const transformTime = (time, format) => {
 
 const createChartMinutesOnHour = (props, arr) => {
   const dayInToday = parseInt(moment(Date.now()).format('D'))
+
   for (let x = 0; x < props.rows.length; x++) {
 
-    if (dayInToday === transformTime(props.rows[x].timeStart, 'D')) {
+    if (dayInToday === transformTime(props.rows[x].timeStart, 'D')) { // условие для того что бы в график не проходили таски с прошлых дней
 
       let hourStart = transformTime(props.rows[x].timeStart, 'H'),
         hourEnd = transformTime(props.rows[x].timeEnd, 'H'),
         hourStartMinutes = transformTime(props.rows[x].timeStart, 'm'),
         hourEndMinutes = transformTime(props.rows[x].timeEnd, 'm'),
-        timeSpend = moment
+        allTimeSpend = moment
           .duration(moment(props.rows[x].timeEnd)
             .diff(moment(props.rows[x].timeStart)))
           .asMinutes() - ((60 - hourStartMinutes) + hourEndMinutes)
@@ -45,17 +46,14 @@ const createChartMinutesOnHour = (props, arr) => {
         arr[hourStart].minutes += (60 - transformTime(props.rows[x].timeStart, 'm'))
         arr[hourEnd].minutes += parseInt(transformTime(props.rows[x].timeEnd, 'm'))
       }
+      // условие которое срабатывает если задание покрывает 3 и более часов 
       if (hourEnd - hourStart > 1) {
         for (let i = hourStart + 1; i < hourEnd; i++) {
-          arr[i].minutes = timeSpend > 60 ? 60 : timeSpend
-          timeSpend -= arr[i].minutes
+          arr[i].minutes = allTimeSpend > 60 ? 60 : allTimeSpend
+          allTimeSpend -= arr[i].minutes
         }
       }
     }
-    else {
-      x++
-    }
-
   }
 }
 let arr = []

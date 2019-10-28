@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import blue from '@material-ui/core/colors/blue';
-import pink from '@material-ui/core/colors/pink';
 import { makeStyles } from '@material-ui/styles';
 import { setRowTasks } from '../../../store/tableTasks/actions'
 import { getModalStatus } from '../../../store/stopwatch/actions'
@@ -12,9 +11,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import ModalWindow from './ModalWindow/ModalWindow'
 
-const pink600 = pink[600]
 const blue900 = blue[900]
-
 const useStyles = makeStyles({
   taskTimer: {
     borderRadius: "50%",
@@ -79,7 +76,7 @@ const Stopwatch = (props) => {
     if (taskName === "") {
       props.getModalStatus(true)
     } else {
-      clearInterval(timer)
+      // clearInterval(timer)
       setButtonText('start')
       setRunningTime(0)
       setTaskName('')
@@ -98,13 +95,19 @@ const Stopwatch = (props) => {
     }
   };
 
-  window.onload = () => {
+  useEffect(() => {
+    if (buttonText === 'start') {
+      clearInterval(timer)
+    }
+  }, [buttonText])
+
+  useEffect(() => {
     if (strogeSaveTimeRinning !== null) {
       startStopwatche(strogeSaveTimeRinning)
       setTimeStart(strogeSaveTimeRinning)
       if (strogeTaskName !== null) setTaskName(strogeTaskName)
     }
-  }
+  }, [])
 
   return (
     <div className={classes.taskContainer}>
