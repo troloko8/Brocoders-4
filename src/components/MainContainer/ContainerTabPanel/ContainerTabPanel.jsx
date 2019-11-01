@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TabPanel from './TabPanel/TabPanel'
 import cyan from '@material-ui/core/colors/cyan';
-import TableTasks from './TableTasks/TableTasks';
+import { TableTasks } from './TableTasks/TableTasks';
 import Chart from './Chart/Chart';
 
 const cyan500 = cyan[500]
@@ -44,7 +44,7 @@ export default function ContainerTabPanel() {
           aria-label="simple tabs example"
         >
           <Tab className={classes.tab} label="task log" {...a11yProps(0)} />
-          <Tab className={classes.tab} label="task chart" {...a11yProps(0)} />
+          <Tab className={classes.tab} label="task chart" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

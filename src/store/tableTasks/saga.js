@@ -1,25 +1,25 @@
 import { takeLatest, put } from 'redux-saga/effects'
-import { deleteRowTasks } from './actions'
+import { deleteRowTask } from './actions'
 
-function* getNewRowTask() {
+function* addNewRowTaskSaga() {
   yield put({
-    type: "GET_NEW_ROW_TASK",
-    playload: JSON.parse(localStorage.getItem('newTask'))
+    type: "ADD_NEW_TASK",
+    payload: JSON.parse(localStorage.getItem('newTask'))
   })
 }
 
 export function* watchAddNewTask() {
-  yield takeLatest("SET_ROW_TASKS", getNewRowTask)
+  yield takeLatest("GET_NEW_TASK", addNewRowTaskSaga)
 }
 
-function* deleteTask() {
+function* deleteTaskSaga() {
   yield put({
-    type: "DELETE_ROW_TASKS",
-    playload: deleteRowTasks().playload
+    type: "DELETE_ROW_TASK",
+    payload: deleteRowTask().payload
   })
 }
 
 export function* watchDeleteTask() {
-  yield takeLatest("DELETE_ROW_TASKS", deleteTask)
+  yield takeLatest("DELETE_ROW_TASK", deleteTaskSaga)
 }
 

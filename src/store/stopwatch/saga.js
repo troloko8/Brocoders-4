@@ -1,14 +1,15 @@
 import { takeLatest, put } from 'redux-saga/effects'
-import { getModalStatus } from './actions'
+import { setModalStatus } from './actions'
 
-function* getModalStatusSaga() {
+function* setModalStatusSaga() {
+  console.log('sdsds')
   yield put({
-    type: "GET_MODAL_STATUS",
-    playload: getModalStatus().playload
+    type: "SET_MODAL_STATUS",
+    playload: setModalStatus().playload
   })
 }
 
 export function* watchModalStatus() {
-  yield takeLatest("GET_MODAL_STATUS", getModalStatus)
+  yield takeLatest("SET_MODAL_STATUS", setModalStatusSaga)
 }
 

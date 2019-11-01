@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { makeStyles, styled } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/styles'
 import blue from '@material-ui/core/colors/blue';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
@@ -8,13 +8,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 
 const blue900 = blue[900]
-
-const ButtonTable = styled(Button)({
-  color: blue900,
-  backgroundColor: 'white',
-  boxShadow: '0 0  5px -1px grey',
-})
-
 const useStyles = makeStyles({
   container: {
     marginLeft: 'auto',
@@ -35,14 +28,22 @@ const useStyles = makeStyles({
   error: {
     textAlign: 'center',
     color: 'red',
+  },
+  button: {
+    color: blue900,
+    backgroundColor: 'white',
+    boxShadow: '0 0  5px -1px grey',
+  },
+  link: {
+    textDecoration: 'none'
   }
 })
 
 const TaskInfo = (props) => {
   const classes = useStyles();
   const numberTask = props.match.params.id
-  const test = props.rows.filter((el) => el.number === parseInt(numberTask))
-  const taskInfo = test[0]
+  const thisTask = props.rows.filter((el) => el.number === parseInt(numberTask))
+  const taskInfo = thisTask[0]
 
   return (
     <div>
@@ -55,23 +56,22 @@ const TaskInfo = (props) => {
             <li>timeEnd: {moment(taskInfo.timeEnd).format("HH:mm:ss")}</li>
             <li>timeSpend: {moment.utc(taskInfo.timeSpend).format("HH:mm:ss")}</li>
           </ul>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <ButtonTable>
+          <Link to="/" className={classes.link}>
+            <Button className={classes.button}>
               back
-        </ButtonTable>
+        </Button>
           </Link>
         </div>
         :
         <div className={classes.error}>
           <div style={{ margin: '15px' }}> ERORR: this task not found</div>
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <ButtonTable >
+          <Link to="/" className={classes.link}>
+            <Button className={classes.button}>
               back
-        </ButtonTable>
+        </Button>
           </Link>
         </div>}
     </div>
-
   )
 }
 
@@ -102,6 +102,5 @@ TaskInfo.propTypes = {
     ]),
   }))
 }
-
 
 export default connect(mapStateToProps)(TaskInfo)

@@ -5,7 +5,7 @@ import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import { makeStyles } from '@material-ui/styles';
 import Modal from '@material-ui/core/Modal';
-import { getModalStatus } from './../../../../store/stopwatch/actions'
+import { setModalStatus } from './../../../../store/stopwatch/actions'
 import PropTypes from 'prop-types';
 
 const pink600 = pink[600]
@@ -46,7 +46,7 @@ const ModalWindow = (props) => {
         <h3 className={classes.modalTitle}> Empty task name</h3>
         <p className={classes.modalText}>You are truing close your task without name? enter the title and try again!</p>
         <Button
-          onClick={() => props.getModalStatus(false)}
+          onClick={() => props.setModalStatus(false)}
           className={classes.modalButton}
         >close</Button>
       </div>
@@ -61,12 +61,12 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  getModalStatus
+  setModalStatus
 }
 
 ModalWindow.propTypes = {
   status: PropTypes.bool,
-  getModalStatus: PropTypes.func
+  setModalStatus: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalWindow)

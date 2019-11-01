@@ -6,26 +6,43 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import blue from '@material-ui/core/colors/blue';
-import { styled } from '@material-ui/styles';
 import { generateNewTasks } from '../../../../store/tableTasks/actions'
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/styles';
 
 const blue900 = blue[900]
 
-const ButtonGenerate = styled(Button)({
-  color: blue900,
-  backgroundColor: 'white',
-  boxShadow: '0 0  5px -1px grey',
-  margin: '20px 0  20px 0',
-  alignSelf: 'flex-end'
+const useStyles = makeStyles({
+  buttonGenerate: {
+    color: blue900,
+    backgroundColor: 'white',
+    boxShadow: '0 0  5px -1px grey',
+    margin: '20px 0  20px 0',
+    alignSelf: 'flex-end'
+  },
+  chartContainer: {
+    width: '100%',
+    height: '400px',
+    display: 'flex',
+    flexDirection: "column"
+  }
+
 })
 
 const transformTime = (time, format) => {
   return parseInt(moment(time).format(format))
 }
 
-const createChartMinutesOnHour = (props, arr) => {
+export const createData = (props) => {
   const dayInToday = parseInt(moment(Date.now()).format('D'))
+  let arr = []
+  for (let i = 0; i < 24; i++) {
+    arr.push({
+      h: i,
+      minutes: 0,
+      maxMinutes: 60
+    })
+  }
 
   for (let x = 0; x < props.rows.length; x++) {
 
@@ -55,26 +72,16 @@ const createChartMinutesOnHour = (props, arr) => {
       }
     }
   }
+
+  return arr
 }
-let arr = []
 
 const Chart = (props) => {
-
-  arr = []
-  for (let i = 0; i < 24; i++) {
-    arr.push({
-      h: i,
-      minutes: 0,
-      maxMinutes: 60
-    })
-  }
-
-  createChartMinutesOnHour(props, arr)
-
+  const classes = useStyles();
   return (
-    <div style={{ width: '100%', height: '400px', display: 'flex', flexDirection: "column" }}>
+    <div className={classes.chartContainer}>
       <ResponsiveContainer width={'100%'} height={400}>
-        <ComposedChart data={arr} margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
+        <ComposedChart data={createData(props)} margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
           <XAxis dataKey="h" />
           <YAxis dataKey="maxMinutes" />
           <Legend />
@@ -83,7 +90,12 @@ const Chart = (props) => {
           <Bar dataKey="minutes" barSize={20} fill="#413ea0" />
         </ComposedChart >
       </ResponsiveContainer>
-      <ButtonGenerate onClick={() => props.generateNewTasks()}>generate</ButtonGenerate>
+      <Button
+        className={classes.buttonGenerate}
+        onClick={() => props.generateNewTasks()}
+      >
+        generate
+        </Button>
     </div>
 
   )

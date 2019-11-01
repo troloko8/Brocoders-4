@@ -4,8 +4,8 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import blue from '@material-ui/core/colors/blue';
 import { makeStyles } from '@material-ui/styles';
-import { setRowTasks } from '../../../store/tableTasks/actions'
-import { getModalStatus } from '../../../store/stopwatch/actions'
+import { getNewTask } from '../../../store/tableTasks/actions'
+import { setModalStatus } from '../../../store/stopwatch/actions'
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ import ModalWindow from './ModalWindow/ModalWindow'
 
 const blue900 = blue[900]
 const useStyles = makeStyles({
-  taskTimer: {
+  boxTimer: {
     borderRadius: "50%",
     boxShadow: '0 5px 10px 0px grey',
     width: '200px',
@@ -44,42 +44,43 @@ const useStyles = makeStyles({
   },
 })
 
+localStorage.setItem('buttonText', 'start')
+
 const Stopwatch = (props) => {
   const classes = useStyles();
   const strogeSaveTimeRinning = JSON.parse(localStorage.getItem('startTime'))
   const strogeTaskName = JSON.parse(localStorage.getItem('taskName'))
+  const strogeButtonText = localStorage.getItem('buttonText', 'start')
 
   const [runningTime, setRunningTime] = useState(0);
   const [timer, setTimer] = useState(Date.now());
   const [taskName, setTaskName] = useState('');
   const [timeStart, setTimeStart] = useState('');
   const [numberTask, setNumberTask] = useState(1);
-  const [buttonText, setButtonText] = useState('start');
 
   const changeTaskName = (e) => {
     setTaskName(e.target.value)
     localStorage.setItem('taskName', JSON.stringify(e.target.value))
   }
 
-  const startStopwatche = (startTime) => {
-
-    props.rows.length === 0 ? setNumberTask(1) : setNumberTask(props.rows[props.rows.length - 1].number + 1)
-    setButtonText('stop')
+  const startStopwatch = (startTime) => {
+    if (props.rows.length !== 0) setNumberTask(props.rows[props.rows.length - 1].number + 1)
     setTimer(setInterval(() => {
       setRunningTime(Date.now() - startTime);
     }))
     setTimeStart(Date.now())
+    localStorage.setItem('buttonText', 'stop')
     localStorage.setItem('startTime', JSON.stringify(startTime))
   }
 
   const stopStopwatch = () => {
     if (taskName === "") {
-      props.getModalStatus(true)
+      props.setModalStatus(true)
     } else {
-      // clearInterval(timer)
-      setButtonText('start')
+      clearInterval(timer)
       setRunningTime(0)
       setTaskName('')
+      localStorage.setItem('buttonText', 'start')
       localStorage.removeItem('startTime')
       localStorage.removeItem('taskName')
 
@@ -91,21 +92,18 @@ const Stopwatch = (props) => {
         timeSpend: runningTime,
       }))
 
-      props.setRowTasks()
+      props.getNewTask()
     }
   };
 
   useEffect(() => {
-    if (buttonText === 'start') {
-      clearInterval(timer)
-    }
-  }, [buttonText])
-
-  useEffect(() => {
     if (strogeSaveTimeRinning !== null) {
-      startStopwatche(strogeSaveTimeRinning)
+      startStopwatch(strogeSaveTimeRinning)
       setTimeStart(strogeSaveTimeRinning)
       if (strogeTaskName !== null) setTaskName(strogeTaskName)
+    }
+    return () => {
+      clearInterval(timer)
     }
   }, [])
 
@@ -119,7 +117,7 @@ const Stopwatch = (props) => {
         value={taskName}
       />
       <Box
-        className={classes.taskTimer}
+        className={classes.boxTimer}
         children={
           <Box
             component="span"
@@ -130,16 +128,16 @@ const Stopwatch = (props) => {
       <Button
         variant="text"
         className={classes.buttonStopOrStart}
-        value={buttonText}
+        value={strogeButtonText}
         onClick={
           (e) => {
             e.currentTarget.value === "start"
-              ? startStopwatche(Date.now())
+              ? startStopwatch(Date.now())
               : stopStopwatch()
           }
         }
       >
-        {buttonText}
+        {strogeButtonText}
       </Button>
       <ModalWindow />
     </div >
@@ -153,8 +151,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  setRowTasks,
-  getModalStatus
+  getNewTask,
+  setModalStatus
 }
 
 Stopwatch.propTypes = {
@@ -177,8 +175,8 @@ Stopwatch.propTypes = {
       PropTypes.object,
     ]),
   })),
-  setRowTasks: PropTypes.func,
-  getModalStatus: PropTypes.func
+  getNewTask: PropTypes.func,
+  setModalStatus: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stopwatch)
