@@ -9,6 +9,7 @@ import blue from '@material-ui/core/colors/blue';
 import { generateNewTasks } from '../../../../store/tableTasks/actions'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles';
+import { withGetScreen } from 'react-getscreen'
 
 const blue900 = blue[900]
 
@@ -78,12 +79,23 @@ export const createData = (props) => {
 
 const Chart = (props) => {
   const classes = useStyles();
+  const innerWidth = window.innerWidth
+
   return (
     <div className={classes.chartContainer}>
       <ResponsiveContainer width={'100%'} height={400}>
-        <ComposedChart data={createData(props)} margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
-          <XAxis dataKey="h" />
-          <YAxis dataKey="maxMinutes" />
+        <ComposedChart data={createData(props)}
+          margin={{ top: 20, right: 0, bottom: 0, left: 0 }}
+          layout={innerWidth <= 480 ? "vertical" : 'horizontal'} >
+          <XAxis
+            dataKey={innerWidth <= 480 ? "maxMinutes" : 'h'}
+            type="number"
+            tickCount={innerWidth <= 480 ? 5 : 24} />
+          />
+            <YAxis
+            dataKey={innerWidth <= 480 ? "h" : 'maxMinutes'}
+            type="number"
+            tickCount={innerWidth <= 480 ? 24 : 5} />
           <Legend />
           <CartesianGrid stroke="#f5f5f5" />
           <Tooltip />
@@ -92,12 +104,10 @@ const Chart = (props) => {
       </ResponsiveContainer>
       <Button
         className={classes.buttonGenerate}
-        onClick={() => props.generateNewTasks()}
-      >
+        onClick={() => props.generateNewTasks()}>
         generate
-        </Button>
+          </Button>
     </div>
-
   )
 }
 
@@ -133,5 +143,5 @@ Chart.propTypes = {
   })),
   generateNewTasks: PropTypes.func
 }
-
+withGetScreen(Chart)
 export default connect(mapStateToProps, mapDispatchToProps)(Chart)

@@ -10,6 +10,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types'
+import Hidden from '@material-ui/core/Hidden';
 
 const blue900 = blue[900];
 const blue50 = blue[50];
@@ -39,21 +40,29 @@ function Tasks(props) {
   }
   const mapTableTasks = props.rows.map(row => (
     <TableRow key={row.number}>
-      <StyledTableCell component="th" scope="row">
-        {row.number}
-      </StyledTableCell>
+      <Hidden smDown>
+        <StyledTableCell component="th" scope="row">
+          {row.number}
+        </StyledTableCell>
+      </Hidden>
       <StyledTableCell align="left">
         {row.nameTask}
       </StyledTableCell>
-      <StyledTableCell align="left">
-        {moment(row.timeStart).format("HH:mm:ss")}
-      </StyledTableCell>
-      <StyledTableCell align="left">
-        {moment(row.timeEnd).format("HH:mm:ss")}
-      </StyledTableCell>
-      <StyledTableCell align="left">
-        {moment.utc(row.timeSpend).format("HH:mm:ss")}
-      </StyledTableCell>
+      <Hidden smDown>
+        <StyledTableCell align="left">
+          {moment(row.timeStart).format("HH:mm:ss")}
+        </StyledTableCell>
+      </Hidden>
+      <Hidden smDown>
+        <StyledTableCell align="left">
+          {moment(row.timeEnd).format("HH:mm:ss")}
+        </StyledTableCell>
+      </Hidden>
+      <Hidden smDown>
+        <StyledTableCell align="left">
+          {moment.utc(row.timeSpend).format("HH:mm:ss")}
+        </StyledTableCell>
+      </Hidden>
       <StyledTableCell align="left" >
         <StyledLink to={`/task/${row.number}`}>
           <StyledButton

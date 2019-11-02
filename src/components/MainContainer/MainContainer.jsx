@@ -5,14 +5,14 @@ import ContainerTabPanel from "./ContainerTabPanel/ContainerTabPanel";
 import Stopwatch from "./Stopwatch/Stopwatch";
 import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   mainContainer: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   }
-})
+}))
 
 export default function MainContainer() {
   const clasess = useStyles()
