@@ -9,7 +9,6 @@ import blue from '@material-ui/core/colors/blue';
 import { generateNewTasks } from '../../../../store/tableTasks/actions'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles';
-import { withGetScreen } from 'react-getscreen'
 
 const blue900 = blue[900]
 
@@ -143,5 +142,5 @@ Chart.propTypes = {
   })),
   generateNewTasks: PropTypes.func
 }
-withGetScreen(Chart)
+
 export default connect(mapStateToProps, mapDispatchToProps)(Chart)
